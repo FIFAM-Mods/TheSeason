@@ -1,13 +1,15 @@
-#include "fifam-api/include/plugin-std.h"
-#include "fifam-api/include/license_check/license_check.h"
-#include "config/Config.h"
+#include "plugin-std.h"
+#include "Config.h"
+#include "license_check/license_check.h"
+#include "InternationalCupsFix.h"
 
 AUTHOR_INFO("TheSeason.v2 ASI plugin for FIFA Manager by Dmitri and Purkas");
 
 using namespace plugin;
 
-#define PLUGIN_NAME "TheSeason.v2";
-unsigned int SEASON_START_YEAR = 2024;
+#define PLUGIN_NAME "TheSeason.v2.3.1";
+#define ENABLE_FM13_INTERNATIONAL_FIX true
+unsigned int SEASON_START_YEAR = 2025;
 unsigned int SEASON_START_MONTH = 7;
 unsigned int SEASON_START_DAY = 1;
 bool START_DAY_CUSTOM = false;
@@ -32,6 +34,12 @@ public:
         unsigned char month = 0;
         unsigned short year = 0;
     };
+
+    static bool UCPPluginInstalled() {
+        auto pluginPath = FM::GameDirPath(L"plugins\\UniversalConverterProject.Main.asi");
+        auto attrs = GetFileAttributesW(pluginPath.c_str());
+        return (attrs != INVALID_FILE_ATTRIBUTES) && !(attrs & FILE_ATTRIBUTE_DIRECTORY);
+    }
 
     template<bool Editor, unsigned int DateSet, unsigned int DateGetDay>
     StartDate GetStartDate(unsigned char forceWeekday) {
@@ -238,6 +246,13 @@ public:
                     patch::SetUInt(0x3126954, 0);
                     CallMethodDynGlobal(0xF5B0E0, game);
                 }
+            }
+
+            if (ENABLE_FM13_INTERNATIONAL_FIX) {
+                if (!UCPPluginInstalled())
+                    PatchInternationalCups(v);
+                else
+                    Warning("Internationals fix is not applied - UCP Plugin is already installed");
             }
 
             if (!DISABLE_ADDITIONAL_PATCHES) {
@@ -1167,6 +1182,34 @@ public:
             if (!DISABLE_ADDITIONAL_PATCHES)
                 patch::SetUInt(0x41507A + 1, 5200);
         }
+        else if (version == ID_FIFA_07_1100_C) {
+            PluginLoaded();
+            patch::SetUInt(0x493F47 + 1, SEASON_START_YEAR); // GetVirtualAttribBaseAge()
+            patch::SetUInt(0x494155 + 1, SEASON_START_YEAR); // Database::Today()
+            patch::SetUInt(0x4A87A1 + 1, SEASON_START_YEAR); // TournamentCmn::GetTournamentManager()
+            patch::SetUInt(0x4A89F9 + 1, SEASON_START_YEAR);
+        }
+        else if (version == ID_FIFA_08_1000_C || version == ID_FIFA_08_1200_C) {
+            PluginLoaded();
+            patch::SetUInt(0x498887 + 1, SEASON_START_YEAR);
+            patch::SetUInt(0x4E5E61 + 1, SEASON_START_YEAR);
+            patch::SetUInt(0x50331B + 1, SEASON_START_YEAR);
+            patch::SetUInt(0x53AB39 + 1, SEASON_START_YEAR);
+            patch::SetUInt(0x53CBF2 + 1, SEASON_START_YEAR);
+            patch::SetUInt(0x568368 + 1, SEASON_START_YEAR);
+            patch::SetUInt(0x1670505 + 1, SEASON_START_YEAR);
+        }
+        //else if (version == ID_FIFA_10_1000_C) {
+        //    PluginLoaded();
+        //    patch::SetUInt(0x4C1160 + 1, SEASON_START_YEAR);
+        //    patch::SetUInt(0x4C1538 + 1, SEASON_START_YEAR);
+        //    patch::SetUInt(0x4D8F3F + 1, SEASON_START_YEAR);
+        //    patch::SetUInt(0x4E160B + 1, SEASON_START_YEAR);
+        //    patch::SetUInt(0x528C16 + 1, SEASON_START_YEAR);
+        //    patch::SetUInt(0x52A888 + 1, SEASON_START_YEAR);
+        //    patch::SetUInt(0x52CB89 + 1, SEASON_START_YEAR);
+        //    patch::SetUInt(0x52DFF8 + 1, SEASON_START_YEAR);
+        //}
         else {
             PluginNotLoaded();
         }

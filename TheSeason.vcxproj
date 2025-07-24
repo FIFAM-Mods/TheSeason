@@ -6,13 +6,6 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="3rdparty\config\Config.cpp" />
-    <ClCompile Include="TheSeason.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="3rdparty\config\Config.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{dbe62cf1-4f3a-4e86-8cb7-7adcd149655b}</ProjectGuid>
     <RootNamespace>TheSeason</RootNamespace>
@@ -37,8 +30,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetExt>.asi</TargetExt>
-    <OutDir>$(SolutionDir)output\plugins\</OutDir>
-    <IntDir>.obj\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)output\</OutDir>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <IntDir>$(SolutionDir).obj\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -49,9 +43,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdparty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>D:\Projects\TheSeason\3rdparty\config;D:\Projects\TheSeason\3rdparty\fifam-api\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -59,10 +53,20 @@
       <GenerateDebugInformation>No</GenerateDebugInformation>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>version.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
     <PostBuildEvent />
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="3rdparty\config\Config.cpp" />
+    <ClCompile Include="InternationalCupsFix.cpp" />
+    <ClCompile Include="TheSeason.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="3rdparty\config\Config.h" />
+    <ClInclude Include="InternationalCupsFix.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
