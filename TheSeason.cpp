@@ -251,8 +251,6 @@ public:
             if (ENABLE_FM13_INTERNATIONAL_FIX) {
                 if (!UCPPluginInstalled())
                     PatchInternationalCups(v);
-                else
-                    Warning("Internationals fix is not applied - UCP Plugin is already installed");
             }
 
             if (!DISABLE_ADDITIONAL_PATCHES) {
