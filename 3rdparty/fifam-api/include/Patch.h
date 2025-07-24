@@ -1,7 +1,3 @@
-/*
-    FIFA Manager API
-    Authors: Dmitry (Dmitri,DK,DK22)
-*/
 #pragma once
 #include <windows.h>
 #include "..\injector\injector.hpp"
